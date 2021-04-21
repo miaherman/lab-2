@@ -1,0 +1,16 @@
+GET http://localhost:3000/
+
+###
+GET http://localhost:3000/api/post
+
+###
+
+POST http://localhost:3000/api/post
+Content-Type: application/json
+
+{
+    "name": "Linda",
+    "text": "Hello world",
+    "created": "2021-04-21"
+    
+}
