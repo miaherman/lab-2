@@ -1,11 +1,15 @@
-GET http://localhost:3000/
+GET http://localhost:3001/
 
 ###
-GET http://localhost:3000/api/post
+GET http://localhost:3001/api/post
 
 ###
 
-POST http://localhost:3000/api/post
+GET http://localhost:3001/api/post/1
+
+###
+
+POST http://localhost:3001/api/post/
 Content-Type: application/json
 
 {
@@ -14,3 +18,16 @@ Content-Type: application/json
     "created": "2021-04-21"
     
 }
+###
+
+PUT http://localhost:3001/api/post
+Content-Type: application/json
+
+{
+    "name": "LiNd4",
+    "text": "_h3lLo0_w0rLD_",
+    "created": "2021-04-25"
+}
+
+###
+DELETE http://localhost:3001/api/post

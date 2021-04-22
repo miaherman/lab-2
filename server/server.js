@@ -2,13 +2,29 @@ const express = require('express')
 const mongoose = require('mongoose');
 require('express-async-errors');
 const postRouter = require('./routers/post.router');
+const usersRouter = require("./routers/user.router");
+const bcrypt = require('bcrypt');
+const cookieSession = require('cookie-session');
 
-const port = 3000
+const port = 3001  
 const app = express();
 
 app.use(express.json());
 app.get('/', (req, res) => res.send('Hello World'));
+
+app.use(cookieSession({
+    name: 'session',
+    secret: 'g5s6kfshj0',
+    secure: 'false',
+    maxAge: 1000 * 60,
+    httpOnly: true
+}));
+
+
+// mongoose
+
 app.use(postRouter);
+app.use(usersRouter);
 
 app.use((err, req, res, next) => {
     console.error(err);
