@@ -28,7 +28,7 @@ router.post('/api/user/register', async (req, res) => {
 });
 
 //Log in
-router.Post('/api/user/login', async (req, res) => {
+router.post('/api/user/login', async (req, res) => {
     const { username, password } = req.body;
     //const user = users.find(u => u.username === username);
     const user = await UserModel.find({});

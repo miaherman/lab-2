@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   password: "String",
 }); //fråga victor
 
-const UserModel = mongoose.model("post", userSchema);
+const UserModel = mongoose.model("user", userSchema);
 
 module.exports = UserModel;
+
