@@ -15,11 +15,10 @@ app.get('/', (req, res) => res.send('Hello World'));
 app.use(cookieSession({
     name: 'session',
     secret: 'g5s6kfshj0',
-    secure: 'false',
-    maxAge: 1000 * 60,
+    secure: false,
+    maxAge: 2000 * 60,
     httpOnly: true
 }));
-
 
 // mongoose
 

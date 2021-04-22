@@ -3,47 +3,57 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 let UserModel = require("../models/user.model");
 
-//Create account
+//Get all users FUNKAR
+router.get('/api/user', async (req, res) => {
+    const docs = await UserModel.find({});
+    res.status(200).json(docs);
+});
+
+//Create account FUNKAR
 router.post('/api/user/register', async (req, res) => {
     const { username, password } = req.body;
-    const existinguser = users.find(u => u.username === username);
-    
+
+    const existinguser = await UserModel.findOne({ username: req.body.username });
+
     //Check if the user exists    
     if(existinguser) {
-        res.status(400).json("Username exists");
+        return res.status(400).json("Username exists");
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = {
-        username,
-        password: hashedPassword
-    }
-
-    // users.push(user);
-    // res.status(201).json();
+    const newUser = new UserModel({username, password: hashedPassword})
 
     // lägger till i databasen
-    const doc = await UserModel.create(req.body);
+    const doc = await UserModel.create(newUser);
     res.status(201).json(doc);
 });
 
-//Log in
+//Log in FUNKKAR!!!!!!
 router.post('/api/user/login', async (req, res) => {
     const { username, password } = req.body;
-    //const user = users.find(u => u.username === username);
-    const user = await UserModel.find({});
 
-    if(!user || !await bcrypt.compare(password, user.password)) {
-        res.status(401).json("Incorrect password or username");
+    const user = await UserModel.findOne({ username: req.body.username })
+
+    if (!user || (!await bcrypt.compare(req.body.password, user.password))) {
+        return res.status(401).json("Wrong username or password");
+    }
+    // Spara den hämtade användaren i Sessionen
+    req.session.user = user._id
+    res.status(201).json("You are logged in!");  
+    
+
+});
+
+//delete session FUNKAR!!!!!
+router.delete('/api/user/logout', async (req, res) => {
+    
+    if (req.session.user) {
+        req.session = null;
+        res.json('Byeyeyeyeye');
         return
     }
 
-    // Hämta användare som skall logga in utifrån användarnamn och lösenord
-    // Spara den hämtade användaren i Sessionen
-    // Skicka tillbaka feedback (true)
-    req.session.loggedInUser = user.username
-    res.status(201).json(user);
-
-});
+    res.status(404).json('No user is logged in');
+    
+})
 
 module.exports = router;

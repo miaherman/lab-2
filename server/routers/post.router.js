@@ -1,41 +1,52 @@
-const express = require('express');
-const PostModel = require('../models/post.model');
+const express = require("express");
+const PostModel = require("../models/post.model");
 const router = express.Router();
 
-//Gets all posts 
-router.get('/api/post', async (req, res) => {
-    const docs = await PostModel.find({});
-    res.status(200).json(docs);
+//Gets all posts  FUNKAR!!!
+router.get("/api/post", async (req, res) => {
+  const docs = await PostModel.find({});
+  res.status(200).json(docs);
 });
 
 // Get specific posts for one user
-router.get('/api/post/:id', async (req, res) => { // Kanske ????
-    const docs = await PostModel.find({});
-    res.status(200).json(docs);
+router.get("/api/post/:id", async (req, res) => {
+  // Kanske ????
+  const docs = await PostModel.find({});
+  res.status(200).json(docs);
 
-    //if logged in
+  //if logged in
 });
 
-//Create post
-router.post('/api/post', async (req, res) => {
+//Create post FUNKAR!!!!
+router.post("/api/post", async (req, res) => {
+  if (req.session) {
+    if (req.session.user) {
+      const newPost = {
+        userId: req.session.user,
+        username: req.body.username,
+        text: req.body.text,
+        created: new Date(),
+      };
 
-    // Hämta och kontrollera om en användare är inloggad ifrån sessionen
-    // Skapa Post inkluderat text och inloggad användare
-    // Spara Post
-
-    if(req.session.loggedInUser) {
-
+      const doc = await PostModel.create(newPost);
+      res.status(201).json(doc);
+      return;
     }
-    
-    const doc = await PostModel.create(req.body);
-    res.status(201).json(doc);
+  }
+
+  res.status(500).json("No logged in user...");
 });
 
-//Delete post
-router.delete('/api/post', async (req, res) => {
-    
-    const doc = await PostModel.deleteOne(req.body);
+//Delete post FUNKAR!!!!!!
+router.delete("/api/post/:id", async (req, res) => {
+  const doc = await PostModel.findOne({ _id: req.params.id });
+
+  if (doc) {
+    await doc.remove();
     res.status(201).json(doc);
+  } else {
+    res.status(404).json("Post does not exist");
+  }
 });
 
 module.exports = router;

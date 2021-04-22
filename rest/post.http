@@ -13,9 +13,8 @@ POST http://localhost:3001/api/post/
 Content-Type: application/json
 
 {
-    "name": "Linda",
-    "text": "Hello world",
-    "created": "2021-04-21"
+    "username": "mona",
+    "text": "Goodbye"
     
 }
 ###
@@ -24,10 +23,9 @@ PUT http://localhost:3001/api/post
 Content-Type: application/json
 
 {
-    "name": "LiNd4",
-    "text": "_h3lLo0_w0rLD_",
-    "created": "2021-04-25"
+    "username": "LiNd4",
+    "text": "_h3lLo0_w0rLD_"
 }
 
 ###
-DELETE http://localhost:3001/api/post
+DELETE http://localhost:3001/api/post/608179d1f00a5c4cbbb13951
