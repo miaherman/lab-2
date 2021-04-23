@@ -5,12 +5,15 @@ const postRouter = require('./routers/post.router');
 const usersRouter = require("./routers/user.router");
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
+const cors = require("cors");
 
 const port = 3001  
 const app = express();
 
 app.use(express.json());
 app.get('/', (req, res) => res.send('Hello World'));
+app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
+
 
 app.use(cookieSession({
     name: 'session',

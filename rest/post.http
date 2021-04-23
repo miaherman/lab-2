@@ -19,12 +19,12 @@ Content-Type: application/json
 }
 ###
 
-PUT http://localhost:3001/api/post
+PUT http://localhost:3001/api/post/60828f3690f71a175e443312
 Content-Type: application/json
 
 {
-    "username": "LiNd4",
-    "text": "_h3lLo0_w0rLD_"
+    "username": "mona",
+    "text": "_h3lLo0_w0rLD_ hejhejehej"
 }
 
 ###

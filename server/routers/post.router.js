@@ -37,6 +37,24 @@ router.post("/api/post", async (req, res) => {
   res.status(500).json("No logged in user...");
 });
 
+// Uppdatera en post- texten!!
+router.put(("/api/post/:id"), async (req, res) => {
+  if (!req.session.user) {
+    return res.status(400).json("You are not logged in");
+  }
+  const post = await PostModel.findOne({ _id: req.params.id });
+  console.log(post)
+
+  if (req.session.userId !== post.userId.toString()) {
+    return res.status(400).json("This is not your post!");
+  } else {
+    const updatedPost = new PostModel(Object.assign(post, req.body));
+    await updatedPost.save();
+    res.json("Post updated");
+  }
+});
+
+
 //Delete post FUNKAR!!!!!!
 router.delete("/api/post/:id", async (req, res) => {
   const doc = await PostModel.findOne({ _id: req.params.id });
