@@ -1,25 +1,25 @@
-GET http://localhost:3001/
+GET http://localhost:4000/
 
 ###
-GET http://localhost:3001/api/post
-
-###
-
-GET http://localhost:3001/api/post/1
+GET http://localhost:4000/api/post
 
 ###
 
-POST http://localhost:3001/api/post/
+GET http://localhost:4000/api/post/1
+
+###
+
+POST http://localhost:4000/api/post/
 Content-Type: application/json
 
 {
-    "username": "mona",
+    "username": "mia",
     "text": "Goodbye"
     
 }
 ###
 
-PUT http://localhost:3001/api/post/60828f3690f71a175e443312
+PUT http://localhost:4000/api/post/6082b60b24a3c921ddcc2cfa
 Content-Type: application/json
 
 {
@@ -28,4 +28,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3001/api/post/608179d1f00a5c4cbbb13951
+DELETE http://localhost:4000/api/post/608179d1f00a5c4cbbb13951

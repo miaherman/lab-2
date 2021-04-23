@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -51,8 +51,9 @@ async function makeRequest(url, method, body) {
   const response = await fetch(url, {
     method: method,
     body: JSON.stringify(body),
+    credentials: "include",
     headers: {
-      "Content-type": "application/json",
+      "Content-Type": "application/json",
     },
   });
 
@@ -61,8 +62,17 @@ async function makeRequest(url, method, body) {
   return result;
 }
 
+async function loginUser(username, password) {
+  
+  const body = { username: username, password: password };
+  const login = await makeRequest("http://localhost:4000/api/user/login", "POST", body, "include");
+  return login
+}
+
 export default function SignIn() {
   const classes = useStyles();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   return (
     <Container component="main" maxWidth="xs">
@@ -76,17 +86,19 @@ export default function SignIn() {
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
+            onChange={ (event) => setUsername(event.target.value)}
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
             autoFocus
           />
           <TextField
+            onChange={ (event) => setPassword(event.target.value)}
             variant="outlined"
             margin="normal"
             required
@@ -102,6 +114,7 @@ export default function SignIn() {
             label="Remember me"
           />
           <Button
+            onClick={ async () => await loginUser(username, password) }
             type="submit"
             fullWidth
             variant="contained"

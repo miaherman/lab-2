@@ -21,6 +21,7 @@ router.get("/api/post/:id", async (req, res) => {
 router.post("/api/post", async (req, res) => {
   if (req.session) {
     if (req.session.user) {
+      console.log(req.session.user)
       const newPost = {
         userId: req.session.user,
         username: req.body.username,
@@ -43,9 +44,8 @@ router.put(("/api/post/:id"), async (req, res) => {
     return res.status(400).json("You are not logged in");
   }
   const post = await PostModel.findOne({ _id: req.params.id });
-  console.log(post)
 
-  if (req.session.userId !== post.userId.toString()) {
+  if (req.session.user !== post.userId.toString()) {
     return res.status(400).json("This is not your post!");
   } else {
     const updatedPost = new PostModel(Object.assign(post, req.body));
