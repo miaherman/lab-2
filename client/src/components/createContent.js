@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
+import { TwitturContext } from "./context";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -26,30 +27,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-async function makeRequest(url, method, body) {
-  const response = await fetch(url, {
-    method: method,
-    body: JSON.stringify(body),
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+// async function makeRequest(url, method, body) {
+//   const response = await fetch(url, {
+//     method: method,
+//     body: JSON.stringify(body),
+//     credentials: "include",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
 
-  const result = await response.json();
-  return result;
-}
+//   const result = await response.json();
+//   return result;
+// }
 
-async function createPost(text, username) {
-  const body = { text: text, username: username };
-  const post = await makeRequest("/api/post", "POST", body);
-  console.log(post)
-  return post
-}
 
 const CreateContent = () => {
   const classes = useStyles();
+  const { createPost } = useContext(TwitturContext);
   const [text, setText] = useState("");
+  const { signedInUser } = useContext(TwitturContext);
+
+  const prepareToCreatePost = () => {
+    const body = { text: text, username: signedInUser };
+    createPost(body)
+  }
 
   return (
     <div>
@@ -67,7 +69,7 @@ const CreateContent = () => {
               placeholder="Skriv din text här"
             />
             <Button
-              onClick={ async () => await createPost(text, "användarnamn") }
+              onClick={prepareToCreatePost}
               type="submit"
               fullWidth
               variant="contained"

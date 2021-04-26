@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -7,6 +7,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { TwitturContext } from "./context";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -55,8 +56,10 @@ async function loginUser(username, password) {
 
 export default function SignIn() {
   const classes = useStyles();
-  const [username, setUsername] = useState("");
+  // const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const { getSignedInUser, signedInUser } = useContext(TwitturContext);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -70,7 +73,7 @@ export default function SignIn() {
         </Typography>
         <form className={classes.form} noValidate onSubmit={e => e.preventDefault()}>
           <TextField
-            onChange={(event) => setUsername(event.target.value)}
+            onChange={(event) => getSignedInUser(event.target.value)}
             variant="outlined"
             margin="normal"
             required
@@ -94,7 +97,7 @@ export default function SignIn() {
             autoComplete="current-password"
           />
           <Button
-            onClick={async () => await loginUser(username, password)}
+            onClick={async () => await loginUser(signedInUser, password)}
             type="submit"
             fullWidth
             variant="contained"

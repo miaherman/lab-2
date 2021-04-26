@@ -13,7 +13,7 @@ POST http://localhost:4000/api/post/
 Content-Type: application/json
 
 {
-    "username": "hej",
+    "username": "kalle",
     "text": "Goodbye"
 }
 
