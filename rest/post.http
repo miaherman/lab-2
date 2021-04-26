@@ -13,10 +13,10 @@ POST http://localhost:4000/api/post/
 Content-Type: application/json
 
 {
-    "username": "mia",
+    "username": "hej",
     "text": "Goodbye"
-    
 }
+
 ###
 
 PUT http://localhost:4000/api/post/6082b60b24a3c921ddcc2cfa

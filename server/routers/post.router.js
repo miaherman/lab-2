@@ -22,6 +22,7 @@ router.post("/api/post", async (req, res) => {
   if (req.session) {
     if (req.session.user) {
       console.log(req.session.user)
+      
       const newPost = {
         userId: req.session.user,
         username: req.body.username,

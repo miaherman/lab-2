@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
@@ -26,8 +26,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+async function makeRequest(url, method, body) {
+  const response = await fetch(url, {
+    method: method,
+    body: JSON.stringify(body),
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const result = await response.json();
+  return result;
+}
+
+async function createPost(text, username) {
+  const body = { text: text, username: username };
+  const post = await makeRequest("/api/post", "POST", body);
+  console.log(post)
+  return post
+}
+
 const CreateContent = () => {
   const classes = useStyles();
+  const [text, setText] = useState("");
+
   return (
     <div>
       <Container component="main" maxWidth="xs">
@@ -36,15 +59,15 @@ const CreateContent = () => {
           <Typography component="h1" variant="h5">
             Post
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={e => e.preventDefault()}>
             <TextareaAutosize
+              onChange={ (event) => setText(event.target.value)}
               rowsMin={4}
-              fullWidth
               aria-label="maximum height"
-              placeholder="Maximum 4 rows"
-              defaultValue="Skriv din post här"
+              placeholder="Skriv din text här"
             />
             <Button
+              onClick={ async () => await createPost(text, "användarnamn") }
               type="submit"
               fullWidth
               variant="contained"

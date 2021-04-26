@@ -14,7 +14,7 @@ POST http://localhost:4000/api/user/login
 Content-Type: application/json
 
 {
-    "username": "mona",
+    "username": "hej",
     "password": "123456"
 }
 

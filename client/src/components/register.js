@@ -3,29 +3,10 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-// import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Link } from "react-router-dom";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        MAJL
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-async function makeRequest(url, method, body, credentials) {
+async function makeRequest(url, method, body) {
   const response = await fetch(url, {
     method: method,
     body: JSON.stringify(body),
@@ -57,15 +38,13 @@ async function makeRequest(url, method, body, credentials) {
     },
   });
 
-  console.log(response);
   const result = await response.json();
   return result;
 }
 
-async function loginUser(username, password) {
-  
+async function registerUser(username, password) {
   const body = { username: username, password: password };
-  const login = await makeRequest("api/user/register", "POST", body, "include");
+  const login = await makeRequest("/api/user/register", "POST", body);
   return login
 }
 
@@ -84,7 +63,7 @@ export default function Register() {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={e => e.preventDefault()}>
           <TextField
             onChange={ (event) => setUsername(event.target.value)}
             variant="outlined"
@@ -109,37 +88,20 @@ export default function Register() {
             id="password"
             autoComplete="current-password"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+
           <Button
-            onClick={ async () => await loginUser(username, password) }
+            onClick={ async () => await registerUser(username, password) }
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
           >
-            Sign up
+            Register
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link to="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
+
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }

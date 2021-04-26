@@ -29,7 +29,7 @@ router.post('/api/user/register', async (req, res) => {
 
 //Log in FUNKKAR!!!!!!
 router.post('/api/user/login', async (req, res) => {
-    const { username, password } = req.body;
+    // const { username, password } = req.body;
 
     const user = await UserModel.findOne({ username: req.body.username })
 
@@ -38,6 +38,7 @@ router.post('/api/user/login', async (req, res) => {
     }
     // Spara den hämtade användaren i Sessionen
     req.session.user = user._id
+    console.log(req.session.user)
     res.status(201).json("You are logged in!");  
     
 
