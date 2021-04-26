@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+mongoose.set('useCreateIndex', true) //stoppar varningen
 
 const userSchema = new mongoose.Schema({
   username: {
