@@ -33,7 +33,7 @@ class TwitturProvider extends Component {
     return result;
   }
 
-  async createPost(postBody) {
+  createPost = async (postBody) => {
     const post = await this.makeRequest("/api/post", "POST", postBody);
     this.setState(({ posts }) => ({ posts: [...posts, post] }));
   }
