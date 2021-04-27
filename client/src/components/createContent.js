@@ -21,26 +21,20 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    maxWidth: '10rem',
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
 }));
-
-// async function makeRequest(url, method, body) {
-//   const response = await fetch(url, {
-//     method: method,
-//     body: JSON.stringify(body),
-//     credentials: "include",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   });
-
-//   const result = await response.json();
-//   return result;
-// }
-
 
 const CreateContent = () => {
   const classes = useStyles();
@@ -50,21 +44,24 @@ const CreateContent = () => {
 
   const prepareToCreatePost = () => {
     const body = { text: text, username: signedInUser };
-    createPost(body)
+
+    if (signedInUser.length > 0) {
+      console.log(signedInUser)
+      createPost(body)
+    }
   }
 
   return (
-    <div>
-      <Container component="main" maxWidth="xs">
+      <Container className={classes.container} component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Post
+            Posti
           </Typography>
           <form className={classes.form} noValidate onSubmit={e => e.preventDefault()}>
             <TextareaAutosize
               onChange={ (event) => setText(event.target.value)}
-              rowsMin={4}
+              rowsMin={6}
               aria-label="maximum height"
               placeholder="Skriv din text här"
             />
@@ -76,12 +73,11 @@ const CreateContent = () => {
               color="primary"
               className={classes.submit}
             >
-              POST
+              POSTUR
             </Button>
           </form>
         </div>
       </Container>
-    </div>
   );
 };
 

@@ -29,37 +29,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-async function makeRequest(url, method, body) {
-  const response = await fetch(url, {
-    method: method,
-    body: JSON.stringify(body),
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const result = await response.json();
-  return result;
-}
-
-async function loginUser(username, password) {
-  const body = { username: username, password: password };
-  const login = await makeRequest(
-    "/api/user/login",
-    "POST",
-    body
-  );
-  console.log(login)
-  return login;
-}
-
 export default function SignIn() {
   const classes = useStyles();
-  // const [username, setUsername] = useState("");
+  
   const [password, setPassword] = useState("");
 
-  const { getSignedInUser, signedInUser } = useContext(TwitturContext);
+  const { getSignedInUser, signedInUser, loginUser } = useContext(TwitturContext);
 
   return (
     <Container component="main" maxWidth="xs">

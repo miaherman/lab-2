@@ -1,41 +1,88 @@
-import React, { useContext } from 'react'
+import React, { useContext } from "react";
 import { TwitturContext } from "./context";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 
-function Home() {
+const useStyles = makeStyles({
+  root: {
+    minWidth: 275,
+    maxWidth: 400,
+    marginBlock: 10,
+  },
+  title: {
+    fontSize: 14,
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+});
 
-const { posts } = useContext(TwitturContext);
-// const [posts, getPosts] = useState([]);
+export default function Home() {
+  const { signedInUser, posts, editPost, deletePost } = useContext(
+    TwitturContext
+  );
+  const classes = useStyles();
 
-//   async function makeRequest(url, method) {
-//     const response = await fetch(url, {
-//       method: method,
-//       credentials: "include",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
+  function editPostPrompt(post) {
+    if (signedInUser === post.username) {
+      const openPrompt = prompt("Edittuurr yourruur posturr");
+      editPost(post, openPrompt, signedInUser);
+    } else if (signedInUser && signedInUser !== post.username) {
+      alert('This is not your post')
+    } else {
+      alert('You are not logged in')
+    }
+  }
 
-//     const result = await response.json();
-//     return result;
-//   }
+  function deletePostAlert(post) {
+    if (signedInUser === post.username) {
+      const openAlert = window.confirm("Do yourur reallyur wantur to deletur?");
 
-//   async function getPostsFromDb() {
-//     let posts = await makeRequest("/api/post", "GET");
-//     getPosts(posts)
-//   }
+      if (openAlert) {
+        deletePost(post, openAlert, signedInUser);
+      }
+      
+    } else if (signedInUser && signedInUser !== post.username) {
+      alert('This is not your post')
+    } else {
+      alert('You are not logged in')
+    }
+  }
 
   return (
-    <div>
-      <h1>Welcome to Twittuurd</h1>
+    <div className={classes.container}>
       {posts.map((post) => (
-        <div key={post._id}>
-            {post.username}
-            {post.text}
-            {post.created}
-        </div>
+        <Card key={post._id} className={classes.root}>
+          <CardContent>
+            <Typography
+              className={classes.title}
+              color="textSecondary"
+              gutterBottom
+            >
+              {post.username}
+            </Typography>
+            <Typography variant="body2" component="p">
+              {post.text}
+              <br />
+              {post.created}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button onClick={() => editPostPrompt(post)} size="small">
+              Edit
+            </Button>
+            <Button onClick={() => deletePostAlert(post)} size="small">
+              Delete
+            </Button>
+          </CardActions>
+        </Card>
       ))}
     </div>
   );
 }
-
-export default Home;

@@ -6,7 +6,12 @@ export const TwitturContext = createContext({
   posts: [],
   getPostsFromDb: () => {},
   makeRequest: () => {},
-  createPost: () => {}
+  createPost: () => {},
+  deletePost: () => {},
+  editPost: () => {},
+  loginUser: () => {},
+  registerUser: () => {}
+
 });
 
 class TwitturProvider extends Component {
@@ -33,9 +38,37 @@ class TwitturProvider extends Component {
     return result;
   }
 
+  loginUser = async (username, password) => {
+    const body = { username: username, password: password };
+    const login = await this.makeRequest(
+      "/api/user/login",
+      "POST",
+      body
+    );
+    console.log(login)
+    return login;
+  }
+
+  registerUser = async(username, password) => {
+    const body = { username: username, password: password };
+    const login = await this.makeRequest("/api/user/register", "POST", body);
+    return login
+  }
+
+  deletePost = async (deletedPost) => {
+    await this.makeRequest(`/api/post/${deletedPost._id}`, "DELETE");
+  }
+
   createPost = async (postBody) => {
     const post = await this.makeRequest("/api/post", "POST", postBody);
     this.setState(({ posts }) => ({ posts: [...posts, post] }));
+  }
+
+
+  editPost = async (editedPost, text, username) => {
+
+    const newBody = { text: text, username: username };
+    await this.makeRequest(`/api/post/${editedPost._id}`, "PUT", newBody);
   }
 
   async getPostsFromDb() {
@@ -55,7 +88,11 @@ class TwitturProvider extends Component {
           getSignedInUser: this.getSignedInUser,
           makeRequest: this.makeRequest,
           getPostsFromDb: this.getPostsFromDb,
-          createPost: this.createPost
+          createPost: this.createPost,
+          deletePost: this.deletePost,
+          editPost: this.editPost,
+          loginUser: this.loginUser,
+          registerUser: this.registerUser
         }}
       >
         {this.props.children}

@@ -7,7 +7,7 @@ import ButtonAppbar from "./components/appBar";
 
 import { Route, Switch } from "react-router-dom";
 
-import TwitturProvider  from "./components/context";
+import TwitturProvider from "./components/context";
 
 function App() {
   return (
@@ -16,8 +16,8 @@ function App() {
         <ButtonAppbar />
         <Switch>
           <Route exact path="/">
-            <Home />
             <CreateContent />
+            <Home />
           </Route>
           <Route exact path="/signin">
             <SignIn />

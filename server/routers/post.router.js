@@ -22,6 +22,9 @@ router.post("/api/post", async (req, res) => {
   if (req.session) {
     if (req.session.user) {
       console.log(req.session.user)
+
+      // const date = new Date()
+      // ....
       
       const newPost = {
         userId: req.session.user,
@@ -58,7 +61,16 @@ router.put(("/api/post/:id"), async (req, res) => {
 
 //Delete post FUNKAR!!!!!!
 router.delete("/api/post/:id", async (req, res) => {
+
+  if (!req.session.user) {
+    return res.status(400).json("You are not logged in");
+  }
+
   const doc = await PostModel.findOne({ _id: req.params.id });
+
+  if (req.session.user !== doc.userId.toString()) {
+    return res.status(400).json("This is not your post!");
+  } 
 
   if (doc) {
     await doc.remove();

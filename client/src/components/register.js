@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,6 +7,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { TwitturContext } from "./context";
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -28,30 +30,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-async function makeRequest(url, method, body) {
-  const response = await fetch(url, {
-    method: method,
-    body: JSON.stringify(body),
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const result = await response.json();
-  return result;
-}
-
-async function registerUser(username, password) {
-  const body = { username: username, password: password };
-  const login = await makeRequest("/api/user/register", "POST", body);
-  return login
-}
 
 export default function Register() {
   const classes = useStyles();
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const { registerUser } = useContext(TwitturContext);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -88,7 +73,7 @@ export default function Register() {
             id="password"
             autoComplete="current-password"
           />
-
+          {/* <Link to="/signin"></Link> */}
           <Button
             onClick={ async () => await registerUser(username, password) }
             type="submit"
