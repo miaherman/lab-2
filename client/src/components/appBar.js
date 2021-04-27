@@ -19,18 +19,22 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  link: {
+    color: "white",
+    textDecoration: "none",
+  }
 }));
 
 export default function ButtonAppBar() {
   const classes = useStyles();
-  const { signedInUser } = useContext(TwitturContext);
-
-  if (signedInUser) {
+  const { loggedIn, logOutUser } = useContext(TwitturContext);
+ 
+  if (loggedIn) {
     return (
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <Link to="/">
+            <Link className={classes.link} to="/">
               <IconButton
                 edge="start"
                 className={classes.menuButton}
@@ -43,14 +47,8 @@ export default function ButtonAppBar() {
             <Typography variant="h6" className={classes.title}>
               Twitturr
             </Typography>
-            <Link to="/signin" variant="body2">
-              <Button color="inherit">Sign In</Button>
-            </Link>
-            <Link to="/register" variant="body2">
-              <Button color="inherit">Register</Button>{" "}
-            </Link>
-            <Link to="/" variant="body2">
-              <Button color="inherit">Logout</Button>{" "}
+            <Link to="/" className={classes.link} variant="body2">
+              <Button onClick={logOutUser} color="inherit">Logout</Button>{" "}
             </Link>
           </Toolbar>
         </AppBar>
@@ -61,7 +59,7 @@ export default function ButtonAppBar() {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <Link to="/">
+            <Link className={classes.link} to="/">
               <IconButton
                 edge="start"
                 className={classes.menuButton}
@@ -74,10 +72,10 @@ export default function ButtonAppBar() {
             <Typography variant="h6" className={classes.title}>
               Twitturr
             </Typography>
-            <Link to="/signin" variant="body2">
+            <Link to="/signin" className={classes.link} variant="body2">
               <Button color="inherit">Sign In</Button>
             </Link>
-            <Link to="/register" variant="body2">
+            <Link to="/register" className={classes.link} variant="body2">
               <Button color="inherit">Register</Button>{" "}
             </Link>
           </Toolbar>

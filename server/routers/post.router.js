@@ -21,16 +21,31 @@ router.get("/api/post/:id", async (req, res) => {
 router.post("/api/post", async (req, res) => {
   if (req.session) {
     if (req.session.user) {
-      console.log(req.session.user)
+      console.log(req.session.user);
 
-      // const date = new Date()
-      // ....
-      
+      let current_date = new Date();
+      let minute = String(current_date.getMinutes());
+
+      if (minute < 10) {
+        minute = "0" + minute;
+      }
+
+      let formatted_date =
+        current_date.getDate() +
+        "/" +
+        (current_date.getMonth() + 1) +
+        "/" +
+        current_date.getFullYear() +
+        " " +
+        current_date.getHours() +
+        ":" +
+        minute;
+
       const newPost = {
         userId: req.session.user,
         username: req.body.username,
         text: req.body.text,
-        created: new Date(),
+        created: formatted_date,
       };
 
       const doc = await PostModel.create(newPost);
@@ -43,7 +58,7 @@ router.post("/api/post", async (req, res) => {
 });
 
 // Uppdatera en post- texten!!
-router.put(("/api/post/:id"), async (req, res) => {
+router.put("/api/post/:id", async (req, res) => {
   if (!req.session.user) {
     return res.status(400).json("You are not logged in");
   }
@@ -58,10 +73,8 @@ router.put(("/api/post/:id"), async (req, res) => {
   }
 });
 
-
 //Delete post FUNKAR!!!!!!
 router.delete("/api/post/:id", async (req, res) => {
-
   if (!req.session.user) {
     return res.status(400).json("You are not logged in");
   }
@@ -70,7 +83,7 @@ router.delete("/api/post/:id", async (req, res) => {
 
   if (req.session.user !== doc.userId.toString()) {
     return res.status(400).json("This is not your post!");
-  } 
+  }
 
   if (doc) {
     await doc.remove();

@@ -10,14 +10,16 @@ export const TwitturContext = createContext({
   deletePost: () => {},
   editPost: () => {},
   loginUser: () => {},
-  registerUser: () => {}
-
+  registerUser: () => {},
+  logOutUser: () => {},
+  loggedIn: false,
 });
 
 class TwitturProvider extends Component {
   state = {
     signedInUser: "",
-    posts: []
+    posts: [],
+    loggedIn: false
   };
 
   getSignedInUser = (signedInUser) => {
@@ -27,11 +29,11 @@ class TwitturProvider extends Component {
   async makeRequest(url, method, body) {
     const response = await fetch(url, {
       method: method,
-      credentials: "include",
       body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "same-origin",
     });
 
     const result = await response.json();
@@ -45,14 +47,29 @@ class TwitturProvider extends Component {
       "POST",
       body
     );
-    console.log(login)
+    alert(login)
+
+      if (login === "You are logged in!") {
+        this.setState({ loggedIn: true })
+      }
+
     return login;
   }
 
   registerUser = async(username, password) => {
     const body = { username: username, password: password };
-    const login = await this.makeRequest("/api/user/register", "POST", body);
-    return login
+    const register = await this.makeRequest("/api/user/register", "POST", body);
+    alert(register)
+    return register
+  }
+
+  logOutUser = async() => {
+    const logout = await this.makeRequest("/api/user/logout", "DELETE");
+
+    this.setState({ loggedIn: false })
+
+    alert(logout)
+    return logout
   }
 
   deletePost = async (deletedPost) => {
@@ -61,7 +78,13 @@ class TwitturProvider extends Component {
 
   createPost = async (postBody) => {
     const post = await this.makeRequest("/api/post", "POST", postBody);
+
     this.setState(({ posts }) => ({ posts: [...posts, post] }));
+
+    // console.log(this.loggedIn)
+    // if (this.loggedIn === false) {
+    //   alert(post)
+    // }
   }
 
 
@@ -92,7 +115,8 @@ class TwitturProvider extends Component {
           deletePost: this.deletePost,
           editPost: this.editPost,
           loginUser: this.loginUser,
-          registerUser: this.registerUser
+          registerUser: this.registerUser,
+          logOutUser: this.logOutUser
         }}
       >
         {this.props.children}

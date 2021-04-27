@@ -24,7 +24,7 @@ router.post('/api/user/register', async (req, res) => {
 
     // lägger till i databasen
     const doc = await UserModel.create(newUser);
-    res.status(201).json(doc);
+    res.status(201).json("New user created!");
 });
 
 //Log in FUNKKAR!!!!!!

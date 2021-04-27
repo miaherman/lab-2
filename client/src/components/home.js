@@ -6,6 +6,8 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import CreateContent from "./createContent";
+
 
 const useStyles = makeStyles({
   root: {
@@ -57,6 +59,10 @@ export default function Home() {
 
   return (
     <div className={classes.container}>
+
+      <h1>Welcome {signedInUser}</h1>
+
+      <CreateContent/>
       {posts.map((post) => (
         <Card key={post._id} className={classes.root}>
           <CardContent>

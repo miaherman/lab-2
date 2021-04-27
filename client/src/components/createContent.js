@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
@@ -48,6 +47,8 @@ const CreateContent = () => {
     if (signedInUser.length > 0) {
       console.log(signedInUser)
       createPost(body)
+    } else {
+      alert("No logged in user...")
     }
   }
 
@@ -55,9 +56,6 @@ const CreateContent = () => {
       <Container className={classes.container} component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
-            Posti
-          </Typography>
           <form className={classes.form} noValidate onSubmit={e => e.preventDefault()}>
             <TextareaAutosize
               onChange={ (event) => setText(event.target.value)}
