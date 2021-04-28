@@ -8,7 +8,6 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import CreateContent from "./createContent";
 
-
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
@@ -26,44 +25,18 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
-  const { signedInUser, posts, editPost, deletePost } = useContext(
-    TwitturContext
-  );
+  const { user, posts, editPost, deletePost } = useContext(TwitturContext);
   const classes = useStyles();
-
-  function editPostPrompt(post) {
-    if (signedInUser === post.username) {
-      const openPrompt = prompt("Edittuurr yourruur posturr");
-      editPost(post, openPrompt, signedInUser);
-    } else if (signedInUser && signedInUser !== post.username) {
-      alert('This is not your post')
-    } else {
-      alert('You are not logged in')
-    }
-  }
-
-  function deletePostAlert(post) {
-    if (signedInUser === post.username) {
-      const openAlert = window.confirm("Do yourur reallyur wantur to deletur?");
-
-      if (openAlert) {
-        deletePost(post, openAlert, signedInUser);
-      }
-      
-    } else if (signedInUser && signedInUser !== post.username) {
-      alert('This is not your post')
-    } else {
-      alert('You are not logged in')
-    }
-  }
 
   return (
     <div className={classes.container}>
 
-      <h1>Welcome {signedInUser}</h1>
-
-      <CreateContent/>
-      {posts.map((post) => (
+      {user && (
+        <h1>Welcome {user.username}</h1>
+      )}
+      
+      <CreateContent />
+      {posts.slice(0).reverse().map((post) => (
         <Card key={post._id} className={classes.root}>
           <CardContent>
             <Typography
@@ -79,14 +52,16 @@ export default function Home() {
               {post.created}
             </Typography>
           </CardContent>
-          <CardActions>
-            <Button onClick={() => editPostPrompt(post)} size="small">
-              Edit
-            </Button>
-            <Button onClick={() => deletePostAlert(post)} size="small">
-              Delete
-            </Button>
-          </CardActions>
+          {user.username === post.username && (
+            <CardActions>
+              <Button onClick={() => editPost(post)} size="small">
+                Edit
+              </Button>
+              <Button onClick={() => deletePost(post)} size="small">
+                Delete
+              </Button>
+            </CardActions>
+          )}
         </Card>
       ))}
     </div>

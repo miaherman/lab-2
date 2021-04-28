@@ -1,67 +1,60 @@
 const express = require("express");
 const PostModel = require("../models/post.model");
 const router = express.Router();
+const secure = require("../middleware/secure");
 
-//Gets all posts  FUNKAR!!!
+//Hämtar alla våra posts
 router.get("/api/post", async (req, res) => {
   const docs = await PostModel.find({});
   res.status(200).json(docs);
 });
 
-// Get specific posts for one user
+// Hämtar en specifik post för en användare
 router.get("/api/post/:id", async (req, res) => {
-  // Kanske ????
+
   const docs = await PostModel.find({});
   res.status(200).json(docs);
-
-  //if logged in
 });
 
-//Create post FUNKAR!!!!
-router.post("/api/post", async (req, res) => {
-  if (req.session) {
-    if (req.session.user) {
-      console.log(req.session.user);
+//Skapar en post
+router.post("/api/post", secure, async (req, res) => {
+  console.log(req.session.user);
 
-      let current_date = new Date();
-      let minute = String(current_date.getMinutes());
+  let current_date = new Date();
+  let minute = String(current_date.getMinutes());
 
-      if (minute < 10) {
-        minute = "0" + minute;
-      }
-
-      let formatted_date =
-        current_date.getDate() +
-        "/" +
-        (current_date.getMonth() + 1) +
-        "/" +
-        current_date.getFullYear() +
-        " " +
-        current_date.getHours() +
-        ":" +
-        minute;
-
-      const newPost = {
-        userId: req.session.user,
-        username: req.body.username,
-        text: req.body.text,
-        created: formatted_date,
-      };
-
-      const doc = await PostModel.create(newPost);
-      res.status(201).json(doc);
-      return;
-    }
+  if (minute < 10) {
+    minute = "0" + minute;
   }
 
-  res.status(500).json("No logged in user...");
-});
+  let formatted_date =
+    current_date.getDate() +
+    "/" +
+    (current_date.getMonth() + 1) +
+    "/" +
+    current_date.getFullYear() +
+    " " +
+    current_date.getHours() +
+    ":" +
+    minute;
 
-// Uppdatera en post- texten!!
-router.put("/api/post/:id", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(400).json("You are not logged in");
+  const newPost = new PostModel({
+    userId: req.session.user,
+    username: req.session.username,
+    text: req.body.text,
+    created: formatted_date,
+  });
+
+  if (newPost.text.length > 0) {
+    const doc = await PostModel.create(newPost);
+    return res.status(201).json(doc);
+  } else {
+    return res.status(404).json("Nunununununu yu haverur tu writur sumethingur");
   }
+})
+
+// Uppdaterar en post
+router.put("/api/post/:id", secure, async (req, res) => {
   const post = await PostModel.findOne({ _id: req.params.id });
 
   if (req.session.user !== post.userId.toString()) {
@@ -73,11 +66,8 @@ router.put("/api/post/:id", async (req, res) => {
   }
 });
 
-//Delete post FUNKAR!!!!!!
-router.delete("/api/post/:id", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(400).json("You are not logged in");
-  }
+//Tar bort en post
+router.delete("/api/post/:id", secure, async (req, res) => {
 
   const doc = await PostModel.findOne({ _id: req.params.id });
 

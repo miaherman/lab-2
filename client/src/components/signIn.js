@@ -32,9 +32,10 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const classes = useStyles();
   
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("");
 
-  const { getSignedInUser, signedInUser, loginUser } = useContext(TwitturContext);
+  const { loginUser } = useContext(TwitturContext);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -48,7 +49,7 @@ export default function SignIn() {
         </Typography>
         <form className={classes.form} noValidate onSubmit={e => e.preventDefault()}>
           <TextField
-            onChange={(event) => getSignedInUser(event.target.value)}
+            onChange={(event) => setUsername(event.target.value)}
             variant="outlined"
             margin="normal"
             required
@@ -72,7 +73,7 @@ export default function SignIn() {
             autoComplete="current-password"
           />
           <Button
-            onClick={async () => await loginUser(signedInUser, password)}
+            onClick={async () => await loginUser(username, password)}
             type="submit"
             fullWidth
             variant="contained"

@@ -2,49 +2,56 @@ const express = require('express')
 const router = express.Router();
 const bcrypt = require("bcrypt");
 let UserModel = require("../models/user.model");
+const secure = require("../middleware/secure");
 
-//Get all users FUNKAR
+//Hämtar alla användare
 router.get('/api/user', async (req, res) => {
     const docs = await UserModel.find({});
     res.status(200).json(docs);
 });
 
-//Create account FUNKAR
+//Skapar ett konto
 router.post('/api/user/register', async (req, res) => {
     const { username, password } = req.body;
 
     const existinguser = await UserModel.findOne({ username: req.body.username });
 
-    //Check if the user exists    
+    //Kollar om användaren existerar
     if(existinguser) {
         return res.status(400).json("Username exists");
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new UserModel({username, password: hashedPassword})
 
-    // lägger till i databasen
+    //Lägger till användaren i databasen
     const doc = await UserModel.create(newUser);
     res.status(201).json("New user created!");
 });
 
-//Log in FUNKKAR!!!!!!
+//Loggar in användaren
 router.post('/api/user/login', async (req, res) => {
-    // const { username, password } = req.body;
 
-    const user = await UserModel.findOne({ username: req.body.username })
+    const user = await UserModel.findOne({ username: req.body.username }).select('+password')
 
     if (!user || (!await bcrypt.compare(req.body.password, user.password))) {
         return res.status(401).json("Wrong username or password");
     }
-    // Spara den hämtade användaren i Sessionen
+    //Sparar den hämtade användaren i sessionen
     req.session.user = user._id
-    console.log(req.session.user)
-    res.status(201).json("You are logged in!");  
-    
-
+    req.session.username = user.username
+    delete user.password
+    res.status(201).json(user);  
 });
 
-//delete session FUNKAR!!!!!
+//Kollar av sessionen mot en specifik användare
+router.post('/api/user/authenticate', secure, (req, res) => {
+    res.status(200).json({
+        _id: req.session.user,
+        username: req.session.username
+    })
+})
+
+//Avbryter sessionen och loggar ut användaren
 router.delete('/api/user/logout', async (req, res) => {
     
     if (req.session.user) {

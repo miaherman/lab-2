@@ -9,7 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { TwitturContext } from "./context";
 
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -84,7 +83,6 @@ export default function Register() {
           >
             Register
           </Button>
-
         </form>
       </div>
     </Container>

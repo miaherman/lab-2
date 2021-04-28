@@ -1,8 +1,6 @@
 import { Component, createContext } from "react";
 
 export const TwitturContext = createContext({
-  getSignedInUser: () => {},
-  signedInUser: "",
   posts: [],
   getPostsFromDb: () => {},
   makeRequest: () => {},
@@ -12,18 +10,14 @@ export const TwitturContext = createContext({
   loginUser: () => {},
   registerUser: () => {},
   logOutUser: () => {},
-  loggedIn: false,
+  loggedIn: undefined,
 });
 
 class TwitturProvider extends Component {
   state = {
-    signedInUser: "",
     posts: [],
-    loggedIn: false
-  };
-
-  getSignedInUser = (signedInUser) => {
-    this.setState({ signedInUser: signedInUser });
+    loggedIn: undefined,
+    user: undefined,
   };
 
   async makeRequest(url, method, body) {
@@ -42,73 +36,76 @@ class TwitturProvider extends Component {
 
   loginUser = async (username, password) => {
     const body = { username: username, password: password };
-    const login = await this.makeRequest(
-      "/api/user/login",
-      "POST",
-      body
-    );
-    alert(login)
+    const user = await this.makeRequest("/api/user/login", "POST", body);
 
-      if (login === "You are logged in!") {
-        this.setState({ loggedIn: true })
-      }
+    this.setState({ loggedIn: true, user });
+    return user;
+  };
 
-    return login;
-  }
+  registerUser = async (username, password) => {
+      const body = { username: username, password: password };
+      const register = await this.makeRequest(
+        "/api/user/register",
+        "POST",
+        body
+      );
 
-  registerUser = async(username, password) => {
-    const body = { username: username, password: password };
-    const register = await this.makeRequest("/api/user/register", "POST", body);
-    alert(register)
-    return register
-  }
+      alert(register);
+      return register;
+  };
 
-  logOutUser = async() => {
+  logOutUser = async () => {
     const logout = await this.makeRequest("/api/user/logout", "DELETE");
-
-    this.setState({ loggedIn: false })
-
-    alert(logout)
-    return logout
-  }
+    this.checkIfUserIsLoggedIn();
+    alert(logout);
+    return logout;
+  };
 
   deletePost = async (deletedPost) => {
-    await this.makeRequest(`/api/post/${deletedPost._id}`, "DELETE");
-  }
+    await this.makeRequest(
+      `/api/post/${deletedPost._id}`,
+      "DELETE"
+    );
+    this.getPostsFromDb();
+  };
 
   createPost = async (postBody) => {
     const post = await this.makeRequest("/api/post", "POST", postBody);
-
     this.setState(({ posts }) => ({ posts: [...posts, post] }));
+    this.getPostsFromDb();
+  };
 
-    // console.log(this.loggedIn)
-    // if (this.loggedIn === false) {
-    //   alert(post)
-    // }
-  }
-
-
-  editPost = async (editedPost, text, username) => {
-
-    const newBody = { text: text, username: username };
+  editPost = async (editedPost) => {
+    const newBody = { text: prompt("Ändra din post") };
     await this.makeRequest(`/api/post/${editedPost._id}`, "PUT", newBody);
-  }
+    this.getPostsFromDb();
+  };
 
   async getPostsFromDb() {
     let posts = await this.makeRequest("/api/post", "GET");
     this.setState({ posts: posts });
   }
 
+  async checkIfUserIsLoggedIn() {
+    const result = await fetch("/api/user/authenticate", { method: "POST" });
+    const user = await result.json();
+    this.setState({
+      loggedIn: result.ok,
+      user,
+    });
+  }
+
   componentDidMount() {
+    this.checkIfUserIsLoggedIn();
     this.getPostsFromDb();
   }
 
   render() {
+    console.log(this.state.loggedIn);
     return (
       <TwitturContext.Provider
         value={{
           ...this.state,
-          getSignedInUser: this.getSignedInUser,
           makeRequest: this.makeRequest,
           getPostsFromDb: this.getPostsFromDb,
           createPost: this.createPost,
@@ -116,7 +113,7 @@ class TwitturProvider extends Component {
           editPost: this.editPost,
           loginUser: this.loginUser,
           registerUser: this.registerUser,
-          logOutUser: this.logOutUser
+          logOutUser: this.logOutUser,
         }}
       >
         {this.props.children}
