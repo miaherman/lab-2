@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  password: "String",
+  password: { type: "String", select: false }, //gör att man ej kan sno lösen :) = bra, secyrityr firstur
 });
 
 const UserModel = mongoose.model("user", userSchema);
