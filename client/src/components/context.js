@@ -37,9 +37,14 @@ class TwitturProvider extends Component {
   loginUser = async (username, password) => {
     const body = { username: username, password: password };
     const user = await this.makeRequest("/api/user/login", "POST", body);
+    console.log(user)
 
-    this.setState({ loggedIn: true, user });
-    return user;
+    if (user !== "Wrong username or password") {
+      this.setState({ loggedIn: true, user });
+    } else {
+      alert(user)
+    }
+
   };
 
   registerUser = async (username, password) => {
