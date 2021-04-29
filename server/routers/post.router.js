@@ -18,7 +18,6 @@ router.get("/api/post/:id", async (req, res) => {
 
 //Skapar en post
 router.post("/api/post", secure, async (req, res) => {
-  console.log(req.session.user);
 
   let current_date = new Date();
   let minute = String(current_date.getMinutes());

@@ -20,7 +20,6 @@ app.use(
   })
 );
 
-// mongoose
 app.use(postRouter);
 app.use(usersRouter);
 
@@ -29,7 +28,7 @@ app.use((err, req, res, next) => {
   res.status(500).json(err.message);
 });
 
-//Kopplar an till vår mongodb
+//Kopplar an till vår databas
 (async function run() {
   try {
     await mongoose.connect("mongodb://localhost:27017/post", {
